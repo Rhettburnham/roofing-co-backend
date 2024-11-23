@@ -3,16 +3,33 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-// const xlsx = require("xlsx");
-// const fs = require("fs");
-// const path = require("path");
 require("dotenv").config(); // Load environment variables
 const { google } = require("googleapis");
 
 const app = express();
 
-// Use cors and body-parser
-app.use(cors({ origin: "https://stunning-gecko-4f1ee0.netlify.app" }));
+// CORS Configuration
+const allowedOrigins = [
+  "https://stunning-gecko-4f1ee0.netlify.app",
+  "http://localhost:5173", // Include for local development if needed
+];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.indexOf(origin) === -1) {
+        const msg =
+          "The CORS policy for this site does not allow access from the specified Origin.";
+        return callback(new Error(msg), false);
+      }
+      return callback(null, true);
+    },
+    credentials: true, // If you need to allow cookies
+  })
+);
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -39,50 +56,8 @@ app.post("/submit-booking", async (req, res) => {
     req.body;
   const selectedService = service === "Other" ? otherService : service;
 
-  // // Define the path to the Excel file
-  // const filePath = path.join(__dirname, "booking_data.xlsx");
-
   try {
-    // Commented out Excel-related code
-    /*
-    let workbook;
-    let worksheet;
-
-    // Check if the Excel file exists
-    if (fs.existsSync(filePath)) {
-      workbook = xlsx.readFile(filePath);
-      worksheet = workbook.Sheets["Bookings"];
-    } else {
-      // Create a new workbook and worksheet
-      workbook = xlsx.utils.book_new();
-      worksheet = xlsx.utils.aoa_to_sheet([
-        ["First Name", "Last Name", "Email", "Phone", "Service", "Message"],
-      ]);
-      xlsx.utils.book_append_sheet(workbook, worksheet, "Bookings");
-    }
-
-    // Read existing data
-    const currentData = xlsx.utils.sheet_to_json(worksheet, { header: 1 });
-
-    // Append new data
-    const newData = [
-      [firstName, lastName, email, phone, selectedService, message],
-    ];
-    const updatedData = [...currentData, ...newData];
-
-    // Update the worksheet with new data
-    const updatedWorksheet = xlsx.utils.aoa_to_sheet(updatedData);
-    workbook.Sheets["Bookings"] = updatedWorksheet;
-
-    // Save the workbook
-    xlsx.writeFile(workbook, filePath);
-    */
-
     // Send the email notification using Gmail API
-    // Get an access token
-    // const accessToken = await oauth2Client.getAccessToken();
-
-    // Create the Gmail API client
     const gmail = google.gmail({ version: "v1", auth: oauth2Client });
 
     // Construct the email
