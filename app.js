@@ -12,7 +12,7 @@ const { google } = require("googleapis");
 const app = express();
 
 // Use cors and body-parser
-app.use(cors({ origin: "http://localhost:5173" })); // Update with your frontend's origin if different
+app.use(cors({ origin: "https://stunning-gecko-4f1ee0.netlify.app" }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
