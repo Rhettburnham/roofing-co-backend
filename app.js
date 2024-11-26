@@ -6,8 +6,8 @@ const { google } = require("googleapis");
 
 const app = express();
 
-// CORS Configuration
-app.use(cors()); // Allow all origins
+// Allow all CORS origins
+app.use(cors());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

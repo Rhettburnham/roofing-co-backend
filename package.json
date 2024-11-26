@@ -18,5 +18,8 @@
     "express": "^4.21.0",
     "googleapis": "^144.0.0",
     "punycode": "^2.3.1"
+  },
+  "engines": {
+    "node": "14.x"
   }
 }
